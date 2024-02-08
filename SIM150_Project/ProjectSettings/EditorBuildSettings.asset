@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/M1_DV1_Arena.unity
+    path: Assets/Scenes/HeroBornScene.unity
     guid: 090c1fa78cc858c449da354b6ccaa535
   m_configObjects: {}

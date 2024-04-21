@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
+    private GameBehavior gameManager;
+
     public float moveSpeed = 10f;
     public float rotateSpeed = 75f;
     public float jumpVelocity = 5f;
@@ -21,6 +23,7 @@ public class PlayerBehavior : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _col = GetComponent<BoxCollider>();
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameBehavior>();
     }
 
     // Update is called once per frame
@@ -34,8 +37,16 @@ public class PlayerBehavior : MonoBehaviour
          */
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.name == "Enemy_01")
+        {
+            gameManager.HP -= 1;
+        }
+    }
+
     //Update that is independent of the frame rate and used for physics code
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         if(IsGrounded() && Input.GetKeyDown(KeyCode.Space))
         {

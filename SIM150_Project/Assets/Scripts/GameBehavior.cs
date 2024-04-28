@@ -6,6 +6,10 @@ using CustomExtensions;
 
 public class GameBehavior : MonoBehaviour, IManager
 {
+    public Stack<string> lootStack = new Stack<string>();
+    public Queue<string> activePlayers = new Queue<string>();
+    public HashSet<string> people = new HashSet<string> { "Joe", "Joan", "Hank" };
+
     private string _state;
     public string State
     {
@@ -59,6 +63,20 @@ public class GameBehavior : MonoBehaviour, IManager
         _state = "Manager initialized...";
         _state.FancyDebug();
         Debug.Log(_state);
+
+        lootStack.Push("Sword of Doom");
+        lootStack.Push("HP+");
+        lootStack.Push("Golden Key");
+        lootStack.Push("Winged Boot");
+        lootStack.Push("Mythril Bracers");
+
+        activePlayers.Enqueue("Harrison");
+        activePlayers.Enqueue("Alex");
+        activePlayers.Enqueue("Haley");
+        var firstPlayer = activePlayers.Peek();
+
+        people.Add("Daniel");
+        people.Remove("Joe");
     }
 
     void Start()
@@ -87,5 +105,13 @@ public class GameBehavior : MonoBehaviour, IManager
                 Utilities.RestartLevel();
             }
         }
+    }
+
+    public void PrintLootReport()
+    {
+        var currentItem = lootStack.Pop();
+        var nextItem = lootStack.Peek();
+        Debug.LogFormat("You got a {0}! You've got a good chance of finding a {1} next!", currentItem, nextItem);
+        Debug.LogFormat("There are {0} random loot items waiting for you!", lootStack.Count);
     }
 }

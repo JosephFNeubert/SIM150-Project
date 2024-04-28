@@ -20,6 +20,7 @@ public class HealthPickupBehavior : MonoBehaviour
 
             gameManager.Items += 1;
             gameManager.HP += 1;
+            gameManager.PrintLootReport();
         }
     }
 }

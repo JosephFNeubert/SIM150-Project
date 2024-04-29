@@ -58,11 +58,16 @@ public class GameBehavior : MonoBehaviour, IManager
         }
     }
 
+    public delegate void DebugDelegate(string newText);
+    public DebugDelegate debug = Print;
+
     public void Initialize()
     {
         _state = "Manager initialized...";
         _state.FancyDebug();
         Debug.Log(_state);
+        debug(_state);
+        LogWithDelegate(debug);
 
         lootStack.Push("Sword of Doom");
         lootStack.Push("HP+");
@@ -82,6 +87,28 @@ public class GameBehavior : MonoBehaviour, IManager
     void Start()
     {
         Initialize();
+        InventoryList<string> inventoryList = new InventoryList<string>();
+        inventoryList.setItem("Potion");
+        Debug.Log(inventoryList.item);
+
+        GameObject player = GameObject.Find("Player");
+        PlayerBehavior playerBehavior = player.GetComponent<PlayerBehavior>();
+        playerBehavior.playerJump += HandlePlayerJump;
+    }
+
+    public void HandlePlayerJump()
+    {
+        debug("Player has jumped!");
+    }
+
+    public static void Print(string newText)
+    {
+        Debug.Log(newText);
+    }
+
+    public void LogWithDelegate(DebugDelegate del)
+    {
+        del("Delegating the debug task...");
     }
 
     void OnGUI()
@@ -102,7 +129,20 @@ public class GameBehavior : MonoBehaviour, IManager
         {
             if(GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200 ,100), "You lose..."))
             {
-                Utilities.RestartLevel();
+                try
+                {
+                    Utilities.RestartLevel(-1);
+                    debug("Level restarted successfully...");
+                }
+                catch (System.ArgumentException e)
+                {
+                    Utilities.RestartLevel(0);
+                    debug("Reverting to scene 0: " + e.ToString());
+                }
+                finally
+                {
+                    debug("Restart terminated.");
+                }
             }
         }
     }
